@@ -1,4 +1,4 @@
-package marczak.pl.slowatrudne
+package marczak.pl.slowatrudne.hardwords
 
 /**
  * Project "SlowaTrudne"

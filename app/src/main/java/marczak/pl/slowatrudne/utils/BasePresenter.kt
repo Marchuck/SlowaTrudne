@@ -1,4 +1,4 @@
-package marczak.pl.slowatrudne
+package marczak.pl.slowatrudne.utils
 
 import io.reactivex.ObservableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers

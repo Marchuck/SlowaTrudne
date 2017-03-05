@@ -1,6 +1,14 @@
-package marczak.pl.slowatrudne
+package marczak.pl.slowatrudne.hardwords
 
+import android.os.Handler
+import android.provider.ContactsContract
+import com.tbruyelle.rxpermissions2.RxPermissions
+import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import marczak.pl.slowatrudne.utils.BasePresenter
+import marczak.pl.slowatrudne.utils.NextObserver
+import marczak.pl.slowatrudne.SjpDictionaryWrapper
+import marczak.pl.slowatrudne.data.DataSource
 
 /**
  * Project "SlowaTrudne"
@@ -12,8 +20,9 @@ import io.reactivex.disposables.Disposable
 
 class HardWordsPresenter(internal var view: HardWordsView?) : BasePresenter() {
 
-    internal var findWordDisposable: Disposable? = null;
+    internal val dataSource by lazy { DataSource() }
 
+    internal var findWordDisposable: Disposable? = null
 
     override fun destroy() {
         //todo:
@@ -21,7 +30,6 @@ class HardWordsPresenter(internal var view: HardWordsView?) : BasePresenter() {
             findWordDisposable!!.dispose()
         }
     }
-
 
     fun findHardWord(word: String) {
         view?.startLoad()
@@ -40,4 +48,18 @@ class HardWordsPresenter(internal var view: HardWordsView?) : BasePresenter() {
                     }
                 })
     }
+
+    fun requestNewHardWord() {
+        view?.startLoad()
+        Handler().post{
+
+            val index = dataSource.randomIndex()
+            val word = dataSource.hardWords[index]
+            val meaning = dataSource.hardWordsMeanings[index]
+
+            view?.showHardWordMeaning(word, arrayListOf(meaning))
+            view?.endLoad()
+        }
+    }
+
 }

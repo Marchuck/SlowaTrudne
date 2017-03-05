@@ -1,52 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/hardWord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/progressBar"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="16sp"
+                android:textSize="30sp"
+                tools:text="APOGEUM" />
+
+            <ScrollView
+                android:id="@+id/hardWordMeaningsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/progressBar">
+
+                <TextView
+                    android:id="@+id/hardWordMeanings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16sp"
+                    android:textSize="20sp"
+                    tools:text="sadsvsvsdvfvfdvfvdfv" />
+            </ScrollView>
+
+
+        </RelativeLayout>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/text2speech"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:src="@android:drawable/ic_btn_speak_now" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/text2speech"
-        android:layout_centerHorizontal="true"
-        android:visibility="invisible" />
-
-    <TextView
-        android:id="@+id/hardWord"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/text2speech"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="end|bottom"
         android:layout_margin="16sp"
-        android:textSize="30sp"
-        tools:text="APOGEUM" />
+        android:src="@android:drawable/ic_btn_speak_now"
+        app:layout_behavior="marczak.pl.slowatrudne.utils.FloatyBehaviour" />
 
-    <ScrollView
-        android:id="@+id/hardWordMeaningsLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/text2speech"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+</android.support.design.widget.CoordinatorLayout>
 
-        <TextView
-            android:id="@+id/hardWordMeanings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16sp"
-            android:textSize="20sp"
-            tools:text="sadsvsvsdvfvfdvfvdfv" />
-    </ScrollView>
-
-
-</RelativeLayout>
