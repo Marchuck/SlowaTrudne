@@ -11,50 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:visibility="invisible" />
-
-            <TextView
-                android:id="@+id/hardWord"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/progressBar"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="16sp"
-                android:textSize="30sp"
-                tools:text="APOGEUM" />
-
-            <ScrollView
-                android:id="@+id/hardWordMeaningsLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/progressBar">
-
-                <TextView
-                    android:id="@+id/hardWordMeanings"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16sp"
-                    android:textSize="20sp"
-                    tools:text="sadsvsvsdvfvfdvfvdfv" />
-            </ScrollView>
-
-
-        </RelativeLayout>
-
     </android.support.v4.widget.SwipeRefreshLayout>
 
 
@@ -66,6 +22,58 @@
         android:layout_margin="16sp"
         android:src="@android:drawable/ic_btn_speak_now"
         app:layout_behavior="marczak.pl.slowatrudne.utils.FloatyBehaviour" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/shareButton"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|bottom"
+        android:layout_margin="16sp"
+        android:src="@android:drawable/ic_menu_share"
+        app:layout_behavior="marczak.pl.slowatrudne.utils.FloatyBehaviour" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/hardWord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/progressBar"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="16sp"
+            android:textSize="30sp"
+            tools:text="APOGEUM" />
+
+        <ScrollView
+            android:id="@+id/hardWordMeaningsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/progressBar">
+
+            <TextView
+                android:id="@+id/hardWordMeanings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16sp"
+                android:textSize="20sp"
+                tools:text="sadsvsvsdvfvfdvfvdfv" />
+        </ScrollView>
+
+
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>
 

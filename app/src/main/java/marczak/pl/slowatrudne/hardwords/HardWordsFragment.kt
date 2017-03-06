@@ -4,12 +4,14 @@ import android.Manifest.permission.RECORD_AUDIO
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
@@ -19,6 +21,7 @@ import marczak.pl.slowatrudne.DialogUtils
 import marczak.pl.slowatrudne.MainActivity
 import marczak.pl.slowatrudne.R
 import marczak.pl.slowatrudne.recognition.RecognizeSpeechActivity
+import marczak.pl.slowatrudne.utils.ShareHelper
 
 /**
  * SlowaTrudne
@@ -51,6 +54,7 @@ class HardWordsFragment : Fragment(), HardWordsView {
     var progressBar: View? = null
     var word: TextView? = null
     var hardWordMeanings: TextView? = null
+    var shareButton: FloatingActionButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +66,7 @@ class HardWordsFragment : Fragment(), HardWordsView {
         presenter = HardWordsPresenter(this)
 
         hardWordMeanings = view.findViewById(R.id.hardWordMeanings) as TextView
+        shareButton = view.findViewById(R.id.shareButton) as FloatingActionButton
         word = view.findViewById(R.id.hardWord) as TextView
         progressBar = view.findViewById(R.id.progressBar)
 
@@ -88,7 +93,7 @@ class HardWordsFragment : Fragment(), HardWordsView {
 
 
     fun showWhatsGoingOnIfNeeded() {
-        DialogUtils.showIfNeeded(activity);
+        DialogUtils.showIfNeeded(activity)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -147,7 +152,8 @@ class HardWordsFragment : Fragment(), HardWordsView {
             }
             hardWordMeanings?.scaleY = 0f
             hardWordMeanings?.scaleX = 0f
-            hardWordMeanings?.text = sb.toString()
+            val hardWordMeaningsAsString = sb.toString()
+            hardWordMeanings?.text = hardWordMeaningsAsString
 
             hardWordMeanings?.animate()
                     ?.setStartDelay(100)
@@ -156,6 +162,25 @@ class HardWordsFragment : Fragment(), HardWordsView {
                     ?.scaleY(1f)
                     ?.setInterpolator(DecelerateInterpolator())
                     ?.start()
+
+            if (hardWordMeanings?.text!!.isEmpty()) {
+                shareButton?.visibility = INVISIBLE
+
+            } else {
+
+                shareButton?.visibility = VISIBLE
+                shareButton?.scaleX = 0f
+                shareButton?.scaleY = 0f
+                shareButton?.animate()
+                        ?.setStartDelay(200)
+                        ?.scaleX(1f)
+                        ?.scaleY(1f)
+                        ?.setDuration(300)
+                        ?.start()
+                shareButton?.setOnClickListener {
+                    ShareHelper.share(activity,hardWord,hardWordMeaningsAsString)
+                }
+            }
         }
     }
 
