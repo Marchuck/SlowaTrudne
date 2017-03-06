@@ -12,6 +12,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.view.animation.BounceInterpolator
+import android.view.animation.DecelerateInterpolator
 import android.widget.TextView
 import com.tbruyelle.rxpermissions2.RxPermissions
 import marczak.pl.slowatrudne.MainActivity
@@ -32,7 +34,6 @@ class HardWordsFragment : Fragment(), HardWordsView {
     val rxPermissions by lazy { RxPermissions(activity) }
 
     internal var presenter: HardWordsPresenter? = null
-
 
     fun btnClicked() {
         rxPermissions.request(RECORD_AUDIO)
@@ -118,12 +119,32 @@ class HardWordsFragment : Fragment(), HardWordsView {
 
     override fun showHardWordMeaning(hardWord: String, meanings: List<String>) {
         word?.post {
+            word?.scaleX = 0f
+            word?.scaleY = 0f
             word?.text = hardWord
+
+            word?.animate()
+                    ?.setDuration(300)
+                    ?.scaleX(1f)
+                    ?.scaleY(1f)
+                    ?.setInterpolator(DecelerateInterpolator())
+                    ?.start()
+
             val sb = StringBuilder()
             for (s in meanings) {
                 sb.append(s).append("\n")
             }
+            hardWordMeanings?.scaleY=0f
+            hardWordMeanings?.scaleX=0f
             hardWordMeanings?.text = sb.toString()
+
+            hardWordMeanings?.animate()
+                    ?.setStartDelay(100)
+                    ?.setDuration(300)
+                    ?.scaleX(1f)
+                    ?.scaleY(1f)
+                    ?.setInterpolator(DecelerateInterpolator())
+                    ?.start()
         }
     }
 
@@ -139,5 +160,4 @@ class HardWordsFragment : Fragment(), HardWordsView {
     fun parentActivity(): MainActivity {
         return activity as MainActivity
     }
-
 }
