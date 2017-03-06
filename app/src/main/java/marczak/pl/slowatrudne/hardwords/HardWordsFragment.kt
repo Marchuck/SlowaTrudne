@@ -12,10 +12,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.view.animation.BounceInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.TextView
 import com.tbruyelle.rxpermissions2.RxPermissions
+import marczak.pl.slowatrudne.DialogUtils
 import marczak.pl.slowatrudne.MainActivity
 import marczak.pl.slowatrudne.R
 import marczak.pl.slowatrudne.recognition.RecognizeSpeechActivity
@@ -42,7 +42,7 @@ class HardWordsFragment : Fragment(), HardWordsView {
                     val intent = Intent(activity, RecognizeSpeechActivity::class.java)
                     startActivityForResult(intent, 200)
                     parentActivity().bestMatchingWorld
-                }.distinct()
+                }.distinctUntilChanged()
                 .map { s -> presenter?.findHardWord(s) }
                 .subscribe { s -> Log.d(TAG, s.toString()) }
 
@@ -77,7 +77,18 @@ class HardWordsFragment : Fragment(), HardWordsView {
             }, 500)
         }
 
+
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        showWhatsGoingOnIfNeeded()
+    }
+
+
+    fun showWhatsGoingOnIfNeeded() {
+        DialogUtils.showIfNeeded(activity);
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -134,8 +145,8 @@ class HardWordsFragment : Fragment(), HardWordsView {
             for (s in meanings) {
                 sb.append(s).append("\n")
             }
-            hardWordMeanings?.scaleY=0f
-            hardWordMeanings?.scaleX=0f
+            hardWordMeanings?.scaleY = 0f
+            hardWordMeanings?.scaleX = 0f
             hardWordMeanings?.text = sb.toString()
 
             hardWordMeanings?.animate()
