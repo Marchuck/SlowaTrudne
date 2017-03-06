@@ -11,6 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
 
@@ -25,12 +28,12 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/shareButton"
-        android:visibility="invisible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start|bottom"
         android:layout_margin="16sp"
         android:src="@android:drawable/ic_menu_share"
+        android:visibility="invisible"
         app:layout_behavior="marczak.pl.slowatrudne.utils.FloatyBehaviour" />
 
     <RelativeLayout
@@ -49,9 +52,8 @@
             android:id="@+id/hardWord"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/progressBar"
             android:layout_centerHorizontal="true"
-            android:layout_margin="16sp"
+            android:layout_marginTop="32sp"
             android:textSize="30sp"
             tools:text="APOGEUM" />
 
@@ -61,7 +63,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/progressBar">
+            android:layout_below="@+id/hardWord"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16sp">
 
             <TextView
                 android:id="@+id/hardWordMeanings"

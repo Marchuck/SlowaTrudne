@@ -47,7 +47,10 @@ class HardWordsFragment : Fragment(), HardWordsView {
                     parentActivity().bestMatchingWorld
                 }.distinctUntilChanged()
                 .map { s -> presenter?.findHardWord(s) }
-                .subscribe { s -> Log.d(TAG, s.toString()) }
+                .onErrorReturn {
+                    showError()
+                }
+                .subscribe {  }
 
     }
 
@@ -63,27 +66,37 @@ class HardWordsFragment : Fragment(), HardWordsView {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.fragment_hard_words, container, false)
+
+
+
+        return view
+    }
+
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         presenter = HardWordsPresenter(this)
 
-        hardWordMeanings = view.findViewById(R.id.hardWordMeanings) as TextView
-        shareButton = view.findViewById(R.id.shareButton) as FloatingActionButton
-        word = view.findViewById(R.id.hardWord) as TextView
-        progressBar = view.findViewById(R.id.progressBar)
+        hardWordMeanings = view?.findViewById(R.id.hardWordMeanings) as TextView
+        shareButton = view?.findViewById(R.id.shareButton) as FloatingActionButton
+        word = view?.findViewById(R.id.hardWord) as TextView
+        progressBar = view?.findViewById(R.id.progressBar)
 
-        val btn = view.findViewById(R.id.text2speech)
-        btn.setOnClickListener { btnClicked() }
+        val btn = view?.findViewById(R.id.text2speech)
+        btn?.setOnClickListener { btnClicked() }
 
-        val swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout) as SwipeRefreshLayout
-        swipeRefreshLayout.setOnRefreshListener {
-            swipeRefreshLayout.isRefreshing = true
+        val swipeRefreshLayout = view?.findViewById(R.id.swipeRefreshLayout) as SwipeRefreshLayout?
+        swipeRefreshLayout?.setOnRefreshListener {
+            Log.d(TAG,"onRefresh")
+//            swipeRefreshLayout.isRefreshing = true
             swipeRefreshLayout.postDelayed({
+                Log.d(TAG,"onRefreshDelayed")
+
                 presenter?.requestNewHardWord()
                 swipeRefreshLayout.isRefreshing = false
             }, 500)
         }
 
-
-        return view
     }
 
     override fun onResume() {
@@ -106,6 +119,7 @@ class HardWordsFragment : Fragment(), HardWordsView {
             }
         }
         parentActivity().bestMatchingWorld.onNext("")
+        showError()
     }
 
     override fun startLoad() {
@@ -130,7 +144,7 @@ class HardWordsFragment : Fragment(), HardWordsView {
 
     override fun showError() {
         if (view != null)
-            Snackbar.make(view!!, "Internet Error occurred", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(view!!, "Wystąpił błąd", Snackbar.LENGTH_LONG).show()
     }
 
     override fun showHardWordMeaning(hardWord: String, meanings: List<String>) {
@@ -178,7 +192,7 @@ class HardWordsFragment : Fragment(), HardWordsView {
                         ?.setDuration(300)
                         ?.start()
                 shareButton?.setOnClickListener {
-                    ShareHelper.share(activity,hardWord,hardWordMeaningsAsString)
+                    ShareHelper.share(activity, hardWord, hardWordMeaningsAsString)
                 }
             }
         }
