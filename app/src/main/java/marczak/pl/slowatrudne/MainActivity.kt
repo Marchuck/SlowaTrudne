@@ -8,7 +8,6 @@ import marczak.pl.slowatrudne.hardwords.HardWordsFragment
 
 class MainActivity : AppCompatActivity() {
 
-    var bestMatchingWorld: Subject<String> = PublishSubject.create<String>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

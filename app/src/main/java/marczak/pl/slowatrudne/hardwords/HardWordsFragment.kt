@@ -15,6 +15,8 @@ import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.widget.TextView
 import com.tbruyelle.rxpermissions2.RxPermissions
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import marczak.pl.slowatrudne.DialogUtils
 import marczak.pl.slowatrudne.MainActivity
 import marczak.pl.slowatrudne.R
@@ -32,6 +34,7 @@ import marczak.pl.slowatrudne.recognition.RecognizeSpeechActivity
 class HardWordsFragment : Fragment(), HardWordsView {
 
     val rxPermissions by lazy { RxPermissions(activity) }
+    var bestMatchingWorld: Subject<String> = PublishSubject.create<String>()
 
     internal var presenter: HardWordsPresenter? = null
 
@@ -41,7 +44,7 @@ class HardWordsFragment : Fragment(), HardWordsView {
                 .flatMap {
                     val intent = Intent(activity, RecognizeSpeechActivity::class.java)
                     startActivityForResult(intent, 200)
-                    parentActivity().bestMatchingWorld
+                    bestMatchingWorld
                 }.distinctUntilChanged()
                 .map { s -> presenter?.findHardWord(s) }
                 .subscribe { s -> Log.d(TAG, s.toString()) }
@@ -96,11 +99,11 @@ class HardWordsFragment : Fragment(), HardWordsView {
         if (requestCode == 200) {
             if (resultCode == Activity.RESULT_OK) {
                 val result = data?.getStringExtra(RecognizeSpeechActivity.TAG)
-                parentActivity().bestMatchingWorld.onNext(result)
+                bestMatchingWorld.onNext(result)
                 return
             }
         }
-        parentActivity().bestMatchingWorld.onNext("")
+        bestMatchingWorld.onNext("")
     }
 
     override fun startLoad() {
