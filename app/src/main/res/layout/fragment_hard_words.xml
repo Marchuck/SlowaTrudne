@@ -26,15 +26,6 @@
         android:src="@android:drawable/ic_btn_speak_now"
         app:layout_behavior="marczak.pl.slowatrudne.utils.FloatyBehaviour" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/shareButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start|bottom"
-        android:layout_margin="16sp"
-        android:src="@android:drawable/ic_menu_share"
-        android:visibility="invisible"
-        app:layout_behavior="marczak.pl.slowatrudne.utils.FloatyBehaviour" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -61,6 +52,7 @@
             android:id="@+id/hardWordMeaningsLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_above="@+id/shareButton"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/hardWord"
@@ -75,7 +67,16 @@
                 android:textSize="20sp"
                 tools:text="sadsvsvsdvfvfdvfvdfv" />
         </ScrollView>
-
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/shareButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="16sp"
+            android:src="@android:drawable/ic_menu_share"
+            android:visibility="invisible"
+            app:layout_behavior="marczak.pl.slowatrudne.utils.FloatyBehaviour"
+            tools:visibility="visible" />
 
     </RelativeLayout>
 

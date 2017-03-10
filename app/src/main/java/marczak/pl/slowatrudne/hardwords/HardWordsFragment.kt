@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
+import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,7 @@ import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.widget.TextView
 import com.tbruyelle.rxpermissions2.RxPermissions
+import io.reactivex.disposables.Disposable
 import marczak.pl.slowatrudne.DialogUtils
 import marczak.pl.slowatrudne.MainActivity
 import marczak.pl.slowatrudne.R
@@ -36,9 +38,13 @@ class HardWordsFragment : Fragment(), HardWordsView {
 
     val rxPermissions by lazy { RxPermissions(activity) }
 
+    var recordDisposable: Disposable? = null;
+
     internal var presenter: HardWordsPresenter? = null
 
     fun btnClicked() {
+        recordDisposable?.dispose()
+
         rxPermissions.request(RECORD_AUDIO)
                 .filter { granted -> granted }
                 .flatMap {
@@ -47,10 +53,11 @@ class HardWordsFragment : Fragment(), HardWordsView {
                     parentActivity().bestMatchingWorld
                 }.distinctUntilChanged()
                 .map { s -> presenter?.findHardWord(s) }
+                .doOnSubscribe { d -> recordDisposable = d }
                 .onErrorReturn {
                     showError()
                 }
-                .subscribe {  }
+                .subscribe { }
 
     }
 
@@ -87,10 +94,10 @@ class HardWordsFragment : Fragment(), HardWordsView {
 
         val swipeRefreshLayout = view?.findViewById(R.id.swipeRefreshLayout) as SwipeRefreshLayout?
         swipeRefreshLayout?.setOnRefreshListener {
-            Log.d(TAG,"onRefresh")
+            Log.d(TAG, "onRefresh")
 //            swipeRefreshLayout.isRefreshing = true
             swipeRefreshLayout.postDelayed({
-                Log.d(TAG,"onRefreshDelayed")
+                Log.d(TAG, "onRefreshDelayed")
 
                 presenter?.requestNewHardWord()
                 swipeRefreshLayout.isRefreshing = false
@@ -148,6 +155,14 @@ class HardWordsFragment : Fragment(), HardWordsView {
     }
 
     override fun showHardWordMeaning(hardWord: String, meanings: List<String>) {
+
+        if (meanings.size == 2) {
+            if (meanings[0].isEmpty() && meanings[1].isEmpty()){
+                showError()
+                return
+            }
+        }
+
         word?.post {
             word?.scaleX = 0f
             word?.scaleY = 0f
@@ -167,7 +182,7 @@ class HardWordsFragment : Fragment(), HardWordsView {
             hardWordMeanings?.scaleY = 0f
             hardWordMeanings?.scaleX = 0f
             val hardWordMeaningsAsString = sb.toString()
-            hardWordMeanings?.text = hardWordMeaningsAsString
+            hardWordMeanings?.text = Html.fromHtml(hardWordMeaningsAsString)
 
             hardWordMeanings?.animate()
                     ?.setStartDelay(100)

@@ -5,10 +5,13 @@ import android.provider.ContactsContract
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.BiFunction
 import marczak.pl.slowatrudne.utils.BasePresenter
 import marczak.pl.slowatrudne.utils.NextObserver
-import marczak.pl.slowatrudne.SjpDictionaryWrapper
+import marczak.pl.slowatrudne.SjpDictionaryClient
+import marczak.pl.slowatrudne.SlangMiejskiClient
 import marczak.pl.slowatrudne.data.DataSource
+import java.util.*
 
 /**
  * Project "SlowaTrudne"
@@ -34,8 +37,16 @@ class HardWordsPresenter(internal var view: HardWordsView?) : BasePresenter() {
     fun findHardWord(word: String) {
         view?.startLoad()
 
-        SjpDictionaryWrapper.findMeanings(word)
-                .doOnSubscribe { d -> findWordDisposable = d; }
+        Observable.zip<List<String>, List<String>, List<String>>(
+                SjpDictionaryClient.findMeanings(word).onErrorReturn { arrayListOf("") },
+                SlangMiejskiClient.findMeanings(word).onErrorReturn { arrayListOf("") },
+                BiFunction<List<String>, List<String>, List<String>> { t1, t2 ->
+                    val l = ArrayList<String>()
+                    l.addAll(t1)
+                    l.addAll(t2)
+                    return@BiFunction l
+                }
+        ).doOnSubscribe { d -> findWordDisposable = d; }
                 .doFinally { view?.endLoad() }
                 .compose(applySchedulers())
                 .subscribeWith(object : NextObserver<List<String>>() {
@@ -51,7 +62,7 @@ class HardWordsPresenter(internal var view: HardWordsView?) : BasePresenter() {
 
     fun requestNewHardWord() {
         view?.startLoad()
-        Handler().post{
+        Handler().post {
 
             val index = dataSource.randomIndex()
             val word = dataSource.hardWords[index]

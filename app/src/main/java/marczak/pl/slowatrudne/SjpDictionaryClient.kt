@@ -20,9 +20,9 @@ import io.reactivex.ObservableOnSubscribe
  * on 05.03.2017.
  */
 
-object SjpDictionaryWrapper {
+object SjpDictionaryClient {
 
-    val TAG = SjpDictionaryWrapper::class.java.simpleName
+    val TAG = SjpDictionaryClient::class.java.simpleName
 
     fun findMeanings(hardWord: String): Observable<List<String>> {
         return Observable.create { emitter ->

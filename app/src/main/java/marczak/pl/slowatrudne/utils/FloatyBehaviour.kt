@@ -22,12 +22,19 @@ class FloatyBehaviour : CoordinatorLayout.Behavior<View> {
     }
 
     override fun layoutDependsOn(parent: CoordinatorLayout?, child: View?, dependency: View?): Boolean {
-        return dependency is Snackbar.SnackbarLayout && child is FloatingActionButton
+        return dependency is Snackbar.SnackbarLayout &&
+
+                child is FloatingActionButton
     }
 
     override fun onDependentViewChanged(parent: CoordinatorLayout?, child: View?, dependency: View?): Boolean {
+
+        val floaty = parent?.findViewById(R.id.shareButton) as View
+
         val translationY = Math.min(0f, dependency!!.translationY - dependency.height)
         child!!.translationY = translationY
+        floaty.translationY = translationY
+
         return true
     }
 
