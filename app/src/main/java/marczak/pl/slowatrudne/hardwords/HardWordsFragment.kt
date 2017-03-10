@@ -19,6 +19,8 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.TextView
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.disposables.Disposable
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import marczak.pl.slowatrudne.DialogUtils
 import marczak.pl.slowatrudne.MainActivity
 import marczak.pl.slowatrudne.R
@@ -38,6 +40,8 @@ class HardWordsFragment : Fragment(), HardWordsView {
 
     val rxPermissions by lazy { RxPermissions(activity) }
 
+    val bestMatchingWord: Subject<String> = PublishSubject.create()
+
     var recordDisposable: Disposable? = null;
 
     internal var presenter: HardWordsPresenter? = null
@@ -50,7 +54,7 @@ class HardWordsFragment : Fragment(), HardWordsView {
                 .flatMap {
                     val intent = Intent(activity, RecognizeSpeechActivity::class.java)
                     startActivityForResult(intent, 200)
-                    parentActivity().bestMatchingWorld
+                    bestMatchingWord
                 }.distinctUntilChanged()
                 .map { s -> presenter?.findHardWord(s) }
                 .doOnSubscribe { d -> recordDisposable = d }
@@ -121,11 +125,11 @@ class HardWordsFragment : Fragment(), HardWordsView {
         if (requestCode == 200) {
             if (resultCode == Activity.RESULT_OK) {
                 val result = data?.getStringExtra(RecognizeSpeechActivity.TAG)
-                parentActivity().bestMatchingWorld.onNext(result)
+                bestMatchingWord.onNext(result)
                 return
             }
         }
-        parentActivity().bestMatchingWorld.onNext("")
+        bestMatchingWord.onNext("")
         showError()
     }
 
@@ -157,7 +161,7 @@ class HardWordsFragment : Fragment(), HardWordsView {
     override fun showHardWordMeaning(hardWord: String, meanings: List<String>) {
 
         if (meanings.size == 2) {
-            if (meanings[0].isEmpty() && meanings[1].isEmpty()){
+            if (meanings[0].isEmpty() && meanings[1].isEmpty()) {
                 showError()
                 return
             }
